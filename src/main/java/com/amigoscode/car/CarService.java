@@ -10,7 +10,8 @@ public class CarService {
 
     private CarDAO carDAO;
 
-    public CarService(@Qualifier("fake") CarDAO carDAO) {
+    //@qualifier decides which database is being used
+    public CarService(@Qualifier("postgres") CarDAO carDAO) {
         this.carDAO = carDAO;
     }
 
@@ -54,8 +55,10 @@ public class CarService {
     }
 
     public void deleteCarByID(Integer deleteID){
-       int deleted = carDAO.deleteCar(deleteID); //creating int for id that is being deleted
-        if (deleted != 1) {
+        Car car = getCarOrThrow(deleteID);
+//        int deleted = carDAO.deleteCar(deleteID); // deleting car and then checking that car is deleted by checking result
+
+        if (carDAO.selectCarById(deleteID) == null) {
             throw new IllegalStateException("Could not delete car.");
         }
         carDAO.deleteCar(deleteID);

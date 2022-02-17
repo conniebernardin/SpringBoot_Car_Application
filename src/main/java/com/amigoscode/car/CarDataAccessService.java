@@ -1,6 +1,7 @@
 package com.amigoscode.car;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +18,18 @@ public class CarDataAccessService implements CarDAO {
     @Override
     public Car selectCarById(Integer id) {
         //todo: implement this method to get car by id from database
+        String sql = """
+                SELECT id, regnumber, brand, price
+                 FROM car
+                 WHERE id = ?;
+                """;
+        //loop through index points from selectAllCars list in selectAllCars method
+        //at each index point, if carId is equal to input id then return that car
+        for(int i =0; i < selectAllCars().size(); i ++){
+            if(selectAllCars().get(i).getId().equals(id)){
+                return selectAllCars().get(i);
+            }
+        }
         return null;
     }
 
@@ -71,6 +84,10 @@ public class CarDataAccessService implements CarDAO {
 
     @Override
     public int updateCar(Integer id, Car update) {
-        return 0;
+        String sql = """
+                UPDATE car SET(regNumber, brand, price) = 
+                (?, ?, ?) WHERE id = ?
+                """;
+        return 1;
     }
 }
